@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scatter Plot with D3.js</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .scatter-plot circle {
+            fill: black;
+            stroke: white;
+        }
+
+        .scatter-plot line {
+            stroke: gray;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="scatterplot"></div>
+
+    <script>
+        // 数据
+        const data = [
+            {x: 30, y: 20},
+            {x: 50, y: 80},
+            {x: 90, y: 50},
+            {x: 130, y: 90},
+            {x: 180, y: 60},
+        ];
+
+        // 有连接的点
+        const lines = [
+            {start: 0, end: 1},
+            {start: 1, end: 2},
+            {start: 3, end: 4}
+        ];
+
+        // 创建SVG画布
+        const svg = d3.select("#scatterplot")
+            .append("svg")
+            .attr("width", 500)
+            .attr("height", 500)
+            .append("g")
+            .attr("class", "scatter-plot");
+
+        // 画线
+        svg.selectAll("line")
+            .data(lines)
+            .enter()
+            .append("line")
+            .attr("x1", d => data[d.start].x)
+            .attr("y1", d => data[d.start].y)
+            .attr("x2", d => data[d.end].x)
+            .attr("y2", d => data[d.end].y)
+            .attr("stroke", "gray")
+            .attr("stroke-width", 2);
+
+        // 画点
+        svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", 5)
+            .attr("fill", "black")
+            .attr("stroke", "white");
+    </script>
+</body>
+</html>
