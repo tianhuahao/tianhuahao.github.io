@@ -36,11 +36,21 @@
             {start: 3, end: 4}
         ];
 
+        // 创建比例尺
+        const xScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.x)])  // x坐标的最大值
+            .range([0, 500]);  // 映射到SVG画布宽度
+
+        const yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.y)])  // y坐标的最大值
+            .range([500, 0]);  // 映射到SVG画布高度，注意y轴是反向的
+
         // 创建SVG画布
         const svg = d3.select("#scatterplot")
             .append("svg")
             .attr("width", 500)
             .attr("height", 500)
+            .attr("viewBox", "0 0 500 500")
             .append("g")
             .attr("class", "scatter-plot");
 
@@ -49,10 +59,10 @@
             .data(lines)
             .enter()
             .append("line")
-            .attr("x1", d => data[d.start].x)
-            .attr("y1", d => data[d.start].y)
-            .attr("x2", d => data[d.end].x)
-            .attr("y2", d => data[d.end].y)
+            .attr("x1", d => xScale(data[d.start].x))
+            .attr("y1", d => yScale(data[d.start].y))
+            .attr("x2", d => xScale(data[d.end].x))
+            .attr("y2", d => yScale(data[d.end].y))
             .attr("stroke", "gray")
             .attr("stroke-width", 2);
 
@@ -61,8 +71,8 @@
             .data(data)
             .enter()
             .append("circle")
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y)
+            .attr("cx", d => xScale(d.x))
+            .attr("cy", d => yScale(d.y))
             .attr("r", 5)
             .attr("fill", "black")
             .attr("stroke", "white");
